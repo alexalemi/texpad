@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8"/>
+    <title>texpad</title>
+
+    <style>
+      textarea {
+        width: 100%;
+        height: 100%;
+      }
+
+      #image {
+        border: 1px solid #ddd;
+        padding: 5px;
+      }
+    </style>
+    <script>
+    MathJax = {
+      svg: {
+        fontCache: 'none'
+      },
+    };
+    </script>
+    <!--
+    <script type="text/javascript" id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js">
+    </script>
+    -->
+    <script type="text/javascript" id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg-full.js">
+    </script>
+    
+
+    <script>
+      const useSVG = true;
+
+      function render() {
+        let output = document.getElementById("result");
+        let input = document.getElementById("plaintext");
+        let button = document.getElementById("button");
+        button.disabled = true;
+
+        var math;
+        if (useSVG) {
+          math = MathJax.tex2svg(input.value.trim());
+          let dataUrl = 'data:image/svg+xml;utf8,'+ math.children[0].outerHTML
+          document.getElementById("image").src = dataUrl;
+        } else {
+          MathJax.startup.output.clearCache();
+          math = MathJax.tex2chtml(input.value.trim());
+          let newsheet = MathJax.chtmlStylesheet();
+          document.head.replaceChild(newsheet, document.getElementById("mathjax-style"));
+          newsheet.id = "mathjax-style";
+        }
+
+        output.replaceChild(math, output.children[0]);
+        button.disabled = false;
+      }
+    </script>
+
+    <style id="mathjax-style"></style>
+  </head>
+  <body>
+    <div id="plaintext-wrapper">
+      <textarea id="plaintext" spellcheck="false" rows="10" oninput="javascript:render(this.value);"></textarea>
+      <input type="button" value="render" onclick="render()" id="button">
+    </div>
+    <div id="result">
+        <svg id="rendered"></svg>
+    </div>
+    <center>
+    <img id="image" border="1px solid black" />
+    </center>
+
+  </body>
+</html>
