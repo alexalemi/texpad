@@ -122,7 +122,7 @@
     </center>
 
     <script>
-      document.getElementById("scale").value = localStorage.scale | 1;
+      document.getElementById("scale").value = localStorage.scale || 1;
       
       let previousFormula = localStorage.plaintext;
       if (previousFormula) {
