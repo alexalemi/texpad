@@ -124,9 +124,9 @@
     <script>
       document.getElementById("scale").value = localStorage.scale | 1;
       
-      let previousFormula = unescape(localStorage.plaintext);
+      let previousFormula = localStorage.plaintext;
       if (previousFormula) {
-        document.getElementById("plaintext").value = previousFormula;
+        document.getElementById("plaintext").value = unescape(previousFormula);
       }
     </script>
   </body>
