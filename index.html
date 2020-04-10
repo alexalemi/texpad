@@ -27,6 +27,10 @@
         margin-right: auto;
       }
 
+			input[type=number] {
+				width: 4em;
+			}
+
       #image {
         border: 1px solid #ddd;
         padding: 0px;
@@ -125,7 +129,7 @@
         <label for="plaintex">LaTeX:</label>
         <textarea id="plaintext" spellcheck="false" rows="3" oninput="javascript:render();" placeholder="Type your LaTeX here..." name="LaTeX"></textarea>
         <label for="scale">Scale:</label>
-        <input type="number" id="scale" name="scale" value=1.0 onchange='cookieStore("scale", this.value); render();'>
+        <input type="number" id="scale" name="scale" value=1.0 onchange='cookieStore("scale", this.value); render();' min=0 step=any>
         <input type="button" type="submit" value="render" onclick="render()" id="button">
       </form>
     </div>
