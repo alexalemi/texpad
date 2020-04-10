@@ -121,7 +121,7 @@
         <label for="plaintex">LaTeX:</label>
         <textarea id="plaintext" spellcheck="false" rows="3" oninput="javascript:render();" placeholder="Type your LaTeX here..." name="LaTeX"></textarea>
         <label for="scale">Scale:</label>
-        <input type="number" id="scale" name="scale" value=5.0 onchange='cookieStore("scale", this.value);'>
+        <input type="number" id="scale" name="scale" value=1.0 onchange='cookieStore("scale", this.value);'>
         <input type="button" type="submit" value="render" onclick="render()" id="button">
       </form>
     </div>
@@ -135,7 +135,7 @@
     </center>
 
     <script>
-      document.getElementById("scale").value = getCookie("scale", 5);
+      document.getElementById("scale").value = getCookie("scale", 1);
       
       let previousFormula = getCookie("plaintext");
       if (previousFormula) {
