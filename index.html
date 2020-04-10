@@ -88,7 +88,7 @@
         }
         let math = MathJax.tex2svg(input.value.trim());
         var svg = math.children[0];
-        let scale = document.getElementById("scale").value;
+        let scale = parseFloat(document.getElementById("scale").value);
         let dataURL = svg2dataURL(svg, scale);
         document.getElementById("image").src = dataURL;
         output.replaceChild(math, output.children[0]);
@@ -147,7 +147,7 @@
       }
 
       function startUp() {
-        document.getElementById("scale").value = localStorage.scale || 1;
+        document.getElementById("scale").value = parseFloat(localStorage.scale || "1");
         
         let previousFormula = localStorage.plaintext;
         if (previousFormula) {
