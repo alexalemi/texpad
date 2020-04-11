@@ -79,7 +79,7 @@
         scaleSVG(svg, scale);
 
         let svgString = new XMLSerializer().serializeToString(svg);
-        let dataURL = 'data:image/svg+xml;utf8,'+ encodeURIComponent(svgString);
+        let dataURL = 'data:image/svg+xml,'+ encodeURIComponent(svgString);
         return dataURL
 
         // let svgString = new XMLSerializer().serializeToString(svg);
