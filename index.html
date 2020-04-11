@@ -38,6 +38,10 @@
 				width: 4em;
 			}
 
+			input[type=text] {
+				width: 6em;
+			}
+
       #image {
         border: 1px solid #ddd;
         padding: 0px;
@@ -97,7 +101,10 @@
         }
         let math = MathJax.tex2svg(input.value.trim());
         var svg = math.children[0];
-        svg.setAttribute("style", "background-color: white; color: #111111")
+        let fgcolor = document.getElementById("fgcolor").value;
+        let bgcolor = document.getElementById("bgcolor").value;
+        // svg.setAttribute("style", "background-color: white; color: #111111")
+        svg.setAttribute("style", "background-color: " + bgcolor + "; color: " + fgcolor);
 
         let scale = parseFloat(document.getElementById("scale").value);
         let dataURL = svg2dataURL(svg, scale);
@@ -160,6 +167,8 @@
 
       function startUp() {
         document.getElementById("scale").value = parseFloat(localStorage.scale || "1");
+        document.getElementById("bgcolor").value = unescape(localStorage.bgcolor || "#ffffff");
+        document.getElementById("fgcolor").value = unescape(localStorage.fgcolor || "#111111");
         
         let previousFormula = localStorage.plaintext;
         if (previousFormula) {
@@ -195,6 +204,10 @@
         <textarea id="plaintext" spellcheck="false" rows="3" onkeyup="render();" placeholder="Type your LaTeX here..." name="LaTeX"></textarea>
         <label for="scale">Scale:</label>
         <input type="number" id="scale" name="scale" value=1.0 onchange='localStorage.scale = escape(this.value); render();' min=0 step=any>
+        <label for="bgcolor">Background Color:</label>
+        <input id="bgcolor" type="text" name="bgcolor" onchange='localStorage.bgcolor = escape(this.value); render();'>
+        <label for="fgcolor">Foreground Color:</label>
+        <input id="fgcolor" type="text" name="fgcolor" onchange='localStorage.fgcolor = escape(this.value); render();'>
         <input type="button" type="submit" value="render & save" onclick="save()" id="button">
       </form>
     </div>
