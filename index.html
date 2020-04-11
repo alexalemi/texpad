@@ -50,7 +50,8 @@
     <script>
     MathJax = {
       svg: {
-        fontCache: 'none' // Set the cache to none so the SVGs contain all the data they need.
+        fontCache: 'none', // Set the cache to none so the SVGs contain all the data they need.
+        matchFontHeight: false
       },
     };
     </script>
@@ -74,10 +75,14 @@
       function svg2dataURL(svg, scale = 1) {
         scaleSVG(svg, scale);
         let svgString = new XMLSerializer().serializeToString(svg);
-        let decoded = unescape(encodeURIComponent(svgString));
-        let base64 = btoa(decoded);
-        let dataURL = 'data:image/svg+xml;base64,'+ base64;
-        return dataURL;
+        let dataURL = 'data:image/svg+xml;utf8,'+ encodeURIComponent(svgString);
+        return dataURL
+
+        // let svgString = new XMLSerializer().serializeToString(svg);
+        // let decoded = unescape(encodeURIComponent(svgString));
+        // let base64 = btoa(decoded);
+        // let dataURL = 'data:image/svg+xml;base64,'+ base64;
+        // return dataURL;
       }
 
       function render() {
@@ -180,9 +185,9 @@
     <div id="plaintext-wrapper">
       <form>
         <label for="plaintex">LaTeX:</label>
-        <textarea id="plaintext" spellcheck="false" rows="3" oninput="render();" placeholder="Type your LaTeX here..." name="LaTeX"></textarea>
+        <textarea id="plaintext" spellcheck="false" rows="3" onkeyup="render();" placeholder="Type your LaTeX here..." name="LaTeX"></textarea>
         <label for="scale">Scale:</label>
-        <input type="number" id="scale" name="scale" value=1.0 onkeyup='localStorage.scale = escape(this.value); render();' min=0 step=any>
+        <input type="number" id="scale" name="scale" value=1.0 onchange='localStorage.scale = escape(this.value); render();' min=0 step=any>
         <input type="button" type="submit" value="render & save" onclick="save()" id="button">
       </form>
     </div>
