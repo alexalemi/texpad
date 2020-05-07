@@ -119,7 +119,7 @@
         <label for="bgcolor">Background Color:</label>
         <input id="bgcolor" type="text" value="#ffffff" name="bgcolor" onchange='localStorage.bgcolor = escape(this.value); render();'>
         <input type="button" type="submit" value="render & save" onclick="save()" id="button">
-      </form>
+
     </div>
     <p>
     Here it is rendered:
@@ -139,6 +139,15 @@
     <div id="history" visible=false>
     </div>
     </center>
+
+    <div>
+    <form>
+        <label for="plaintex">Preamble:</label>
+        <textarea id="preamble" spellcheck="false" rows="3" onkeyup="renderPreamble();" placeholder="Use to define macros, commands, etc..." name="Preamble"></textarea>
+    </form>
+    <div id="preambleOutput">
+    </div>
+    </div>
 
     <div id="footer">Made by <a href="https://alexalemi.com">Alex Alemi</a>.</div>
 
@@ -190,6 +199,19 @@
         document.getElementById("image").src = dataURL;
         //output.replaceChild(math, output.children[0]);
         output.innerHTML = math.outerHTML;
+      }
+
+      function renderPreamble() {
+        let input = document.getElementById("preamble");
+        let output = document.getElementById("preambleOutput");
+        if (input.value) {
+          localStorage.preamble = escape(input.value);
+        }
+        // execute the preamble.
+        let math = MathJax.tex2svg(input.value.trim());
+        output.innerHTML = math.outerHTML;
+        // render again.
+        render();
       }
 
       var History = {
@@ -248,11 +270,17 @@
         document.getElementById("scale").value = parseFloat(localStorage.scale || "1");
         document.getElementById("bgcolor").value = unescape(localStorage.bgcolor || "#ffffff");
         document.getElementById("fgcolor").value = unescape(localStorage.fgcolor || "#111111");
+
+        let previousPreamble = localStorage.preamble;
+        if (previousPreamble) {
+          document.getElementById("preamble").value = unescape(previousPreamble);
+        }
         
         let previousFormula = localStorage.plaintext;
         if (previousFormula) {
           document.getElementById("plaintext").value = unescape(previousFormula);
         }
+        renderPreamble();
         render();
 
         History.load();
