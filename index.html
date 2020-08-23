@@ -203,7 +203,7 @@
           document.getElementById("image").src = dataURL;
           //output.replaceChild(math, output.children[0]);
           output.innerHTML = math.outerHTML;
-        });
+        }).catch((err) => console.log('Typeset failed: ' + err.message));
 
         button.disabled = false;
       }
