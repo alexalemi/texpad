@@ -118,7 +118,7 @@
         <input id="fgcolor" type="text" value="#111111" name="fgcolor" onchange='localStorage.fgcolor = escape(this.value); render();'>
         <label for="bgcolor">Background Color:</label>
         <input id="bgcolor" type="text" value="#ffffff" name="bgcolor" onchange='localStorage.bgcolor = escape(this.value); render();'>
-        <input type="button" type="submit" value="render & save" onclick="save()" id="button">
+        <input type="button" id="button" type="submit" value="render & save" onclick="save()" id="button">
 
     </div>
     <p>
@@ -184,21 +184,29 @@
       function render() {
         let output = document.getElementById("result");
         let input = document.getElementById("plaintext");
+        let button = document.getElementById("button");
+        button.disabled = true;
+        console.log("inside render");
+
         if (input.value) {
           localStorage.plaintext = escape(input.value);
         }
-        let math = MathJax.tex2svg(input.value.trim());
-        var svg = math.children[0];
-        let fgcolor = document.getElementById("fgcolor").value;
-        let bgcolor = document.getElementById("bgcolor").value;
-        // svg.setAttribute("style", "background-color: white; color: #111111")
-        svg.setAttribute("style", "background-color: " + bgcolor + "; color: " + fgcolor);
 
-        let scale = parseFloat(document.getElementById("scale").value);
-        let dataURL = svg2dataURL(svg, scale);
-        document.getElementById("image").src = dataURL;
-        //output.replaceChild(math, output.children[0]);
-        output.innerHTML = math.outerHTML;
+        MathJax.tex2svgPromise(input.value.trim()).then((math) => {
+          var svg = math.children[0];
+          let fgcolor = document.getElementById("fgcolor").value;
+          let bgcolor = document.getElementById("bgcolor").value;
+          // svg.setAttribute("style", "background-color: white; color: #111111")
+          svg.setAttribute("style", "background-color: " + bgcolor + "; color: " + fgcolor);
+
+          let scale = parseFloat(document.getElementById("scale").value);
+          let dataURL = svg2dataURL(svg, scale);
+          document.getElementById("image").src = dataURL;
+          //output.replaceChild(math, output.children[0]);
+          output.innerHTML = math.outerHTML;
+        });
+
+        button.disabled = false;
       }
 
       function renderPreamble() {
