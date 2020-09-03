@@ -312,18 +312,7 @@
       let plaintext = document.getElementById("plaintext");
       var timeout = null;
       //Listen for keystroke events
-      plaintext.addEventListener('keyup', function (e) {
-        //Clear the timeout if it has been set.
-        // This will prevent the previous task from executing
-        // if it has been less than <MILLISECONDS>
-        clearTimeout(timeout);
-
-        // Make a new timeout set to go off for a while
-        timeout = setTimeout(function () {
-          console.log("Fire autosave.");
-          save();
-        }, 10000);
-      });
+      plaintext.addEventListener('keyup', debounce(save, 10000));
 
       document.onkeyup = function (e) {
         let key = e.which || e.keyCode;
