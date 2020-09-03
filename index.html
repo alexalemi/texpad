@@ -111,7 +111,7 @@
     <div id="plaintext-wrapper">
       <form>
         <label for="plaintex">LaTeX:</label>
-        <textarea id="plaintext" spellcheck="false" rows="3" onkeyup="render();" placeholder="Type your LaTeX here..." name="LaTeX"></textarea>
+        <textarea id="plaintext" spellcheck="false" rows="3" onkeyup="debounce(render, 100)();" placeholder="Type your LaTeX here..." name="LaTeX"></textarea>
         <label for="scale">Scale:</label>
         <input type="number" id="scale" name="scale" value=1.0 onchange='localStorage.scale = escape(this.value); render();' min=0 step=any>
         <label for="fgcolor">Color:</label>
@@ -181,31 +181,36 @@
         // return dataURL;
       }
 
+      let promise = Promise.resolve();
       function render() {
-        let output = document.getElementById("result");
-        let input = document.getElementById("plaintext");
-        let button = document.getElementById("button");
-        button.disabled = true;
+        promise = promise.then(() => {
+          let output = document.getElementById("result");
+          let input = document.getElementById("plaintext");
+          let button = document.getElementById("button");
+          button.disabled = true;
 
-        if (input.value) {
-          localStorage.plaintext = escape(input.value);
-        }
+          if (input.value) {
+            localStorage.plaintext = escape(input.value);
+          }
 
-        MathJax.tex2svgPromise(input.value.trim()).then((math) => {
-          var svg = math.children[0];
-          let fgcolor = document.getElementById("fgcolor").value;
-          let bgcolor = document.getElementById("bgcolor").value;
-          // svg.setAttribute("style", "background-color: white; color: #111111")
-          svg.setAttribute("style", "background-color: " + bgcolor + "; color: " + fgcolor);
+          let promise = MathJax.tex2svgPromise(input.value.trim()).then((math) => {
+            var svg = math.children[0];
+            let fgcolor = document.getElementById("fgcolor").value;
+            let bgcolor = document.getElementById("bgcolor").value;
+            // svg.setAttribute("style", "background-color: white; color: #111111")
+            svg.setAttribute("style", "background-color: " + bgcolor + "; color: " + fgcolor);
 
-          let scale = parseFloat(document.getElementById("scale").value);
-          let dataURL = svg2dataURL(svg, scale);
-          document.getElementById("image").src = dataURL;
-          //output.replaceChild(math, output.children[0]);
-          output.innerHTML = math.outerHTML;
-        }).catch((err) => console.log('Typeset failed: ' + err.message));
+            let scale = parseFloat(document.getElementById("scale").value);
+            let dataURL = svg2dataURL(svg, scale);
+            document.getElementById("image").src = dataURL;
+            //output.replaceChild(math, output.children[0]);
+            output.innerHTML = math.outerHTML;
+          }).catch((err) => console.log('Typeset failed: ' + err.message));
 
-        button.disabled = false;
+          button.disabled = false;
+          return promise;
+        }).catch((err) => console.error(err));
+        return promise;
       }
 
       function renderPreamble() {
@@ -326,6 +331,21 @@
           save();
         }
       }
+
+      function debounce(func, wait, immediate) {
+        let timeout;
+        return function() {
+          let context = this, args = arguments;
+          let later = function () {
+            timeout = null;
+            if (!immediate) func.apply(context, args);
+          };
+          let callNow = immediate && !timeout;
+          clearTimeout(timeout);
+          timeout = setTimeout(later, wait);
+          if (callNow) func.apply(context, args);
+        };
+      };
     </script>
 
   </body>
