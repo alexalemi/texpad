@@ -300,6 +300,7 @@
       }
 
       window.MathJax = {
+        loader: {load: ['ui/safe']},
         startup: {
           ready: () => {
             MathJax.startup.defaultReady();
