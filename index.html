@@ -202,7 +202,10 @@
 
             let scale = parseFloat(document.getElementById("scale").value);
             let dataURL = svg2dataURL(svg, scale);
-            document.getElementById("image").src = dataURL;
+            let image = document.getElementById("image");
+            image.src = dataURL;
+            image.alt = input.value;
+            image.title = input.value;
             //output.replaceChild(math, output.children[0]);
             output.innerHTML = math.outerHTML;
           }).catch((err) => console.log('Typeset failed: ' + err.message));
